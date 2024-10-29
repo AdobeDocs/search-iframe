@@ -1237,11 +1237,11 @@ const Search = ({
                         return a[1].value.length > b[1].value.length ? -1 : 1;
                       });
                       content =
-                        descriptions[0][1]?.value?.length > descriptions[1][1]?.value?.length
-                          ? descriptions[0][1]?.value
-                          : descriptions[1][1]?.value;
+                        descriptions[0]?.[1]?.value?.length > descriptions[1]?.[1]?.value?.length
+                          ? descriptions[0]?.[1]?.value
+                          : descriptions[1]?.[1]?.value;
                     } else {
-                      content = descriptions[0][1]?.value ? descriptions[0][1]?.value : '';
+                      content = descriptions[0]?.[1]?.value ? descriptions[0]?.[1]?.value : '';
                     }
 
                     content = content.substring(0, 250);
