@@ -377,30 +377,32 @@ const Search = ({
   useEffect(async () => {
     window.addEventListener('message', e => {
       try {
-        const message = JSON.parse(e.data);
-        if (message.localPathName) {
-          let localPathName = message.localPathName;
-          if (localPathName !== '/') {
-            // make sure path name has a slash at start/end to match path-prefix format
-            if (!localPathName.startsWith('/')) {
-              localPathName = `/${localPathName}`;
+        if (e.data) {
+          const message = JSON.parse(e.data);
+          if (message.localPathName) {
+            let localPathName = message.localPathName;
+            if (localPathName !== '/') {
+              // make sure path name has a slash at start/end to match path-prefix format
+              if (!localPathName.startsWith('/')) {
+                localPathName = `/${localPathName}`;
+              }
+              if (!localPathName.endsWith('/')) {
+                localPathName = `${localPathName}/`;
+              }
+              const localProduct = indexAll.find(product =>
+                product.productIndices.some(idx => {
+                  return localPathName.startsWith(idx.indexPathPrefix);
+                })
+              );
+
+              if (localProduct?.productName) {
+                setSearchIndex([localProduct.productName, ...searchIndex]);
+              }
             }
-            if (!localPathName.endsWith('/')) {
-              localPathName = `${localPathName}/`;
-            }
-            const localProduct = indexAll.find(product =>
-              product.productIndices.some(idx => {
-                return localPathName.startsWith(idx.indexPathPrefix);
-              })
-            );
-  
-            if (localProduct?.productName) {
-              setSearchIndex([localProduct.productName, ...searchIndex]);
-            }
+
+            const reply = JSON.stringify({ received: message.localPathName });
+            window.parent.postMessage(reply, '*');
           }
-  
-          const reply = JSON.stringify({ received: message.localPathName });
-          window.parent.postMessage(reply, '*');
         }
       } catch (e) {
         console.log('Unable to retrieve search messgage:');
