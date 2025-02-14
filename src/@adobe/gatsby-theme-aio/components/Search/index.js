@@ -377,7 +377,7 @@ const Search = ({
   useEffect(async () => {
     window.addEventListener('message', e => {
       try {
-        if (e.data) {
+        if (e.data.message) {
           const message = JSON.parse(e.data);
           if (message.localPathName) {
             let localPathName = message.localPathName;
