@@ -121,7 +121,7 @@ const searchSuggestions = async (
       query,
       params: {
         hitsPerPage: Math.ceil(SUGGESTION_MAX_RESULTS / searchIndex.length),
-        attributesToRetrieve: ['objectID', 'url', 'product', 'title', 'description'],
+        attributesToRetrieve: ['*'],
       },
     });
   });
@@ -173,7 +173,7 @@ const searchIndexes = async (
       query,
       params: {
         facets: [SEARCH_KEYWORDS],
-        attributesToRetrieve: ['objectID', 'url', 'product'],
+        attributesToRetrieve: ['*'],
         hitsPerPage: Math.ceil(SEARCH_MAX_RESULTS / selectedIndex.length),
         filters: keywords.map(keyword => `${SEARCH_KEYWORDS}:"${keyword}"`).join(' AND '),
       },
@@ -184,7 +184,7 @@ const searchIndexes = async (
 };
 
 const mapSearchResults = (hits, results) => {
-  hits.forEach(({ objectID, url, path, product, description, title, _highlightResult }) => {
+  hits.forEach(({ objectID, url, path, product, description, title, _highlightResult }) => {    
     let urlPath = '';
     if (path) {
       // console.log(path);
@@ -334,7 +334,7 @@ const Search = ({
 
       if (search?.results?.length) {
         search.results.forEach(({ hits, facets }) => {
-          if (facets === undefined) return;
+          // if (facets === undefined) return;
           if (hits.length > 0) {
             const product = hits[0].product;
 
@@ -348,9 +348,10 @@ const Search = ({
               }
             }
           }
+          console.log("search hits", hits);
 
           mapSearchResults(hits, mappedSearchResults);
-          mapKeywordResults(facets, mappedKeywordResults);
+          // mapKeywordResults(facets, mappedKeywordResults);
 
           return true;
         });
@@ -367,6 +368,8 @@ const Search = ({
           setIsLoading(false);
         }
       } else {
+        console.log(mappedSearchResults);
+        
         setSearchResults(mappedSearchResults);
         setKeywordResults(mappedKeywordResults);
         setIsLoading(false);
@@ -546,6 +549,7 @@ const Search = ({
           if (suggestions?.results?.length) {
             const results = [];
             suggestions.results.forEach(({ hits }) => {
+              console.log("suggestion hits", hits);
               mapSearchResults(hits, results);
             });
             const filteredResults = results.map((searchSuggestion, index, results) => {
