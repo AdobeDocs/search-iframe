@@ -184,7 +184,7 @@ const searchIndexes = async (
 };
 
 const mapSearchResults = (hits, results) => {
-  hits.forEach(({ objectID, url, path, product, description, title, _highlightResult }) => {    
+  hits.forEach(({ objectID, url, path, product, description, title, _highlightResult, fragment }) => {    
     let urlPath = '';
     if (path) {
       // console.log(path);
@@ -208,6 +208,7 @@ const mapSearchResults = (hits, results) => {
           product,
           description,
           title,
+          fragment,
           _highlightResult,
         });
       }
@@ -553,7 +554,7 @@ const Search = ({
               mapSearchResults(hits, results);
             });
             const filteredResults = results.map((searchSuggestion, index, results) => {
-              const to = `${window.location.origin}${searchSuggestion.url}`;
+              const to = `${window.location.origin}${searchSuggestion.url}${searchSuggestion.fragment || ''}`;
               const title = searchSuggestion._highlightResult.title?.value
                 ? searchSuggestion._highlightResult.title.value
                 : '';
@@ -1228,7 +1229,7 @@ const Search = ({
                     }
                   `}>
                   {searchResults.map(searchResult => {
-                    const to = `${window.location.origin}${searchResult.url}`;
+                    const to = `${window.location.origin}${searchResult.url}${searchResult.fragment || ''}`;
                     const title = searchResult._highlightResult.title?.value
                       ? searchResult._highlightResult.title.value
                       : '';
