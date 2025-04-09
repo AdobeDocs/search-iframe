@@ -187,32 +187,9 @@ export default ({ children, pageContext, location }) => {
   // ["index1", "index2", ...]
   const [indexAll, setIndexAll] = useState(false);
 
-  // Load and initialize IMS
+  // Don't load ims for search and just set to false
   useEffect(() => {
-    const IMS_SRC = process.env.GATSBY_IMS_SRC;
-    const IMS_CONFIG = process.env.GATSBY_IMS_CONFIG;
-
-    if ((IMS_SRC && IMS_CONFIG) && IMS_CONFIG !== "false") {
-      (async () => {
-        try {
-          await addScript(`${IMS_SRC}`);
-          let IMS_CONFIG_JSON = JSON.parse(IMS_CONFIG);
-          IMS_CONFIG_JSON.onReady = () => {
-            setIms(window.adobeIMS);
-            setIsLoadingIms(false);
-          };
-          window.adobeImsFactory.createIMSLib(IMS_CONFIG_JSON);
-          window.adobeIMS.initialize();
-        } catch (e) {
-          console.error(`AIO: IMS error.`);
-        } finally {
-          setIsLoadingIms(false);
-        }
-      })();
-    } else {
-      console.warn('AIO: IMS config missing.');
       setIsLoadingIms(false);
-    }
   }, []);
 
   // Load all data once and pass it to the Provider
