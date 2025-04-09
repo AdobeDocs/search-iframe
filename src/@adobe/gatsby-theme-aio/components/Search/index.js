@@ -566,9 +566,7 @@ const Search = ({
                 ? searchSuggestion._highlightResult.title.value
                 : '';
               const descriptions = Object.entries(searchSuggestion._highlightResult).filter(
-                optn => {
-                  return optn[1].matchedWords.length > 0;
-                }
+                optn => optn[1].matchedWords && optn[1].matchedWords.length > 0
               );
               const product = searchSuggestion.product ? searchSuggestion.product : '';
               let content = '';
@@ -1241,7 +1239,7 @@ const Search = ({
                       ? searchResult._highlightResult.title.value
                       : '';
                     const descriptions = Object.entries(searchResult._highlightResult).filter(
-                      optn => optn[1].matchedWords.length > 0
+                      optn => optn[1].matchedWords && optn[1].matchedWords.length > 0
                     );
                     let content = '';
                     if (descriptions.length > 1) {
